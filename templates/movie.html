@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Details - MovieRec</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #1e1e2f;
+      color: white;
+      margin: 0;
+      padding: 2rem;
+    }
+    .movie-container {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      max-width: 1000px;
+      margin: auto;
+      flex-wrap: wrap;
+    }
+    img {
+      border-radius: 10px;
+      max-width: 300px;
+    }
+    .details {
+      flex: 1;
+    }
+    h1 {
+      color: #b499ff;
+    }
+    .genres, .year, .description, .cast, .rating {
+      margin: 1rem 0;
+    }
+    .wishlist-btn {
+      margin-top: 1rem;
+      background: var(--lavender, #b499ff);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .back-home {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      font-size: 1rem;
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+    .back-home:hover {
+      background: #b499ff;
+      color: white;
+    }
+    iframe {
+      margin-top: 1rem;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+
+<a class="back-home" href="{{ url_for('index') }}">← Back to Home</a>
+
+<div class="movie-container" id="movieDetails"></div>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const movieId = parseInt(urlParams.get("id"));
+  const isTmdb = urlParams.get("tmdb") === "true";
+  const API_KEY = "82949e8e5f0fdee432a981cfb0d77abe";
+
+  const container = document.getElementById("movieDetails");
+
+  if (isTmdb) {
+    fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`)
+      .then(r => r.json())
+      .then(details => {
+        fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`)
+          .then(res => res.json())
+          .then(credits => {
+            fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`)
+              .then(v => v.json())
+              .then(videoData => {
+                const trailer = videoData.results?.find(v => v.type === "Trailer" && v.site === "YouTube");
+                const cast = credits.cast?.slice(0, 5).map(c => c.name).join(', ') || 'Cast not available';
+                const rating = details.vote_average ? `${details.vote_average.toFixed(1)} / 10` : 'No rating available';
+                const genres = details.genres?.map(g => g.name).join(', ') || 'Unknown';
+                const poster = details.poster_path ? `https://image.tmdb.org/t/p/w342/${details.poster_path}` : '/static/fallback.jpg';
+
+                container.innerHTML = `
+                  <img src="${poster}" alt="${details.title}" />
+                  <div class="details">
+                    <h1>${details.title}</h1>
+                    <p class="genres"><strong>Genres:</strong> ${genres}</p>
+                    <p class="year"><strong>Year:</strong> ${details.release_date?.split("-")[0]}</p>
+                    <p class="description"><strong>Description:</strong> ${details.overview || 'No description available.'}</p>
+                    <p class="cast"><strong>Cast:</strong> ${cast}</p>
+                    <p class="rating"><strong>Rating:</strong> ⭐ IMDb ${rating}</p>
+                    ${trailer ? `<iframe src="https://www.youtube.com/embed/${trailer.key}" allowfullscreen></iframe>` : ''}
+                    <button class="wishlist-btn" onclick="addToWishlist(${movieId})">+ Add to Wishlist</button>
+                  </div>
+                `;
+              });
+          });
+      });
+  } else {
+    fetch("/data/movies_full.json")
+      .then(r => r.json())
+      .then(data => {
+        const movie = data.find(m => m.movieId === movieId);
+        if (!movie) {
+          container.innerHTML = "<p>Movie not found.</p>";
+          return;
+        }
+
+        fetch(`https://api.themoviedb.org/3/movie/${movie.tmdbId}/videos?api_key=${API_KEY}`)
+          .then(r => r.json())
+          .then(videoData => {
+            const trailer = videoData.results?.find(v => v.type === "Trailer" && v.site === "YouTube");
+            const rating = movie.tmdb_rating ? `${movie.tmdb_rating.toFixed(1)} / 10` : 'No rating available';
+            const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w342/${movie.poster_path}` : '/static/fallback.jpg';
+            const description = movie.overview || 'No description available.';
+            const cast = movie.full_cast ? movie.full_cast.slice(0, 5).join(', ') : 'Cast info not available';
+
+            container.innerHTML = `
+              <img src="${poster}" alt="${movie.title}" />
+              <div class="details">
+                <h1>${movie.title}</h1>
+                <p class="genres"><strong>Genres:</strong> ${movie.genres}</p>
+                <p class="year"><strong>Year:</strong> ${movie.year || 'N/A'}</p>
+                <p class="description"><strong>Description:</strong> ${description}</p>
+                <p class="cast"><strong>Cast:</strong> ${cast}</p>
+                <p class="rating"><strong>Rating:</strong> ⭐ IMDb ${rating}</p>
+                ${trailer ? `<iframe src="https://www.youtube.com/embed/${trailer.key}" allowfullscreen></iframe>` : ''}
+                <button class="wishlist-btn" onclick="addToWishlist(${movie.movieId})">+ Add to Wishlist</button>
+              </div>
+            `;
+          });
+      });
+  }
+
+  function addToWishlist(id) {
+    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    if (!wishlist.includes(id)) {
+      wishlist.push(id);
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+      alert("Added to wishlist!");
+    } else {
+      alert("Already in wishlist.");
+    }
+  }
+</script>
+
+</body>
+</html>

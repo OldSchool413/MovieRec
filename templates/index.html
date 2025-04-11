@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MovieRec</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="right-links">
+      <a class="icon-btn" href="{{ url_for('wishlist') }}" title="View Wishlist">
+        <i class="fas fa-bookmark"></i>
+      </a>
+      <a class="icon-btn" href="{{ url_for('login') }}" title="Login">
+        <i class="fas fa-sign-in-alt"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+<header class="hero">
+  <div class="hero-content">
+    <h1 class="brand">🎬 MovieRec</h1>
+    <p class="tagline">Your Personalized Movie Recommender</p>
+  </div>
+</header>
+
+<!-- How to Use & Browse -->
+<section class="section" id="movies">
+  <div class="container movie-section">
+    <div class="how-to-use">
+      <h2>How to Use</h2>
+      <ul>
+        <li>🔍 Search for Movies</li>
+        <li>🎬 Browse by genre & sort</li>
+        <li>⭐ Rate movies & Add to Wishlist</li>
+      </ul>
+    </div>
+
+    <h2>Browse Movies</h2>
+
+    <div class="search-filter">
+      <input type="text" id="searchInput" placeholder="Search for a movie...">
+      <select id="sortSelect">
+        <option value="">Sort By</option>
+        <option value="rating-desc">Rating ↓</option>
+        <option value="rating-asc">Rating ↑</option>
+        <option value="year-desc">Year ↓</option>
+        <option value="year-asc">Year ↑</option>
+      </select>
+    </div>
+
+    <div class="genre-badges" id="genreFilters"></div>
+    <div class="movie-grid" id="movieGrid"></div>
+  </div>
+</section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2025 MovieRec. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

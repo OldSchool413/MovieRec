@@ -1,0 +1,243 @@
+/* General Styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #1e1e2f;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+/* Top Navigation */
+.topbar {
+  background-color: #2a2a3d;
+  padding: 0.5rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon-btn {
+  color: white;
+  margin: 0.5rem;
+  font-size: 2rem;
+  text-decoration: none;
+}
+
+.icon-btn:hover {
+  color: #b499ff;
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 0.1rem 0.1rem;
+  background-color: #2a2a3d;
+}
+
+.hero .brand {
+  font-size: 4rem;
+  color: #b499ff;
+}
+
+.hero .tagline {
+  margin: 0.1rem;
+  font-size: 1.5rem;
+}
+
+
+/* Section Container */
+.section {
+  padding: 0.5rem 0.5rem;
+  text-align: center;
+}
+
+.section h2 {
+  font-size: 1.8rem;
+  color: #b499ff;
+}
+
+.how-to-use {
+  margin: 1rem;
+  text-align: center;
+  align-items: center
+}
+
+.how-to-use h2 {
+  font-size: 1.5rem;
+  color: #b499ff;
+  }
+
+.how-to-use ul {
+  list-style: none;
+  padding: 0.3rem;
+  margin-top: 1rem;
+ }
+
+.how-to-use li {
+  color: #ddd;
+  font-size: 1.2rem;
+  line-height: 1.3rem;
+  }
+
+
+/* Search + Filter */
+.search-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem auto 0.5rem;
+  max-width: 100%
+}
+
+.search-filter input[type="text"],
+.search-filter select {
+  padding: 0.9rem 1.2rem;
+  border-radius: 20px;
+  font-size: 1.05rem;
+  width: 340px;
+  max-width: 90%;
+}
+
+.badge {
+  background-color: #35354d;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  margin: 0.3rem;
+  cursor: pointer;
+  color: white;
+  font-size: 0.85rem;
+}
+
+.badge:hover {
+  background-color: #b499ff;
+  color: white;
+}
+
+.genre-badges {
+  margin-top: 3 rem; /* increased spacing from search bar */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#genreFilters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+/* Movie Grid */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 2rem;
+  margin: 0;
+  width: 100%;
+  max-width: ;
+  box-sizing: border-box;
+.centered-section, .section, .container {
+  max-width: 220px; !important;
+}
+
+/* Movie Cards */
+.movie-card {
+  background-color: #2a2a3d;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.movie-card:hover {
+  transform: scale(1.03);
+}
+
+.movie-card img {
+  max-width: 220px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.movie-card.live-result {
+  max-width: 220px;  /* Increase or remove this to match grid size */
+  margin: 1rem auto;
+}
+
+
+/* Text + Genre + Star */
+.movie-card h4 {
+  margin: 1rem 0 0.4rem;
+  font-size: 1rem;
+  color: #b499ff;
+}
+
+.movie-card p {
+  margin: 0.3rem 0;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.stars i {
+  color: #f0d97c;
+  font-size: 1.3rem;
+  margin: 0 0.05rem;
+}
+
+.movie-rating-label {
+  font-size: 0.85rem;
+  color: #ccc;
+  margin-top: 0.3rem;
+}
+
+/* Wishlist Hover Icon */
+.movie-card .overlay {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+}
+
+.add-to-wishlist {
+  font-size: 1.4rem;
+  color: #b499ff;
+  transition: color 0.3s ease;
+}
+
+.add-to-wishlist:hover {
+  color: #fff;
+}
+
+/* TMDb Label */
+.tmdb-label {
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+  color: #7e7ed9;
+}
+
+/* Footer */
+footer {
+  background-color: #2a2a3d;
+  padding: 2rem;
+  text-align: center;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+footer .social-icons a {
+  color: #b499ff;
+  margin: 0 0.5rem;
+  font-size: 1.2rem;
+}
+.movie-section {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+

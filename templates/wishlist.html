@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Wishlist - MovieRec</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #1e1e2f;
+      color: white;
+      margin: 0;
+      padding: 2rem;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+    }
+    .topbar a, .topbar span {
+      color: #b499ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #b499ff;
+    }
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .movie-card {
+      background: #2c2c3f;
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      padding: 1rem;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    .movie-card:hover {
+      transform: scale(1.05);
+    }
+    .movie-card img {
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .movie-card h4 {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #b499ff;
+      cursor: pointer;
+    }
+    .movie-card p {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin: 0.25rem 0;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: crimson;
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔙 Back + Welcome -->
+  <div class="topbar">
+    <a href="{{ url_for('index') }}">← Back to Home</a>
+    <span id="userGreeting"></span>
+  </div>
+
+  <h1>🎬 Your Wishlist</h1>
+  <div class="movie-grid" id="wishlistGrid"></div>
+
+  <script>
+    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    const grid = document.getElementById("wishlistGrid");
+
+    fetch("/data/movies_full.json")
+      .then(res => res.json())
+      .then(data => {
+        const savedMovies = data.filter(m => wishlist.includes(m.movieId));
+        if (savedMovies.length === 0) {
+          grid.innerHTML = '<p>You have no movies in your wishlist yet.</p>';
+        } else {
+          savedMovies.forEach(movie => {
+            const poster = movie.poster_path
+              ? `https://image.tmdb.org/t/p/w342/${movie.poster_path}`
+              : "https://via.placeholder.com/300x450?text=No+Image";
+            const cast = movie.cast && movie.cast.length
+              ? movie.cast.slice(0, 5).join(', ')
+              : "Cast info not available";
+            const rating = movie.rating ? movie.rating.toFixed(1) + " ⭐" : "N/A";
+            const genres = movie.genres || "No genre info";
+
+            const card = document.createElement("div");
+            card.className = "movie-card";
+            card.innerHTML = `
+              <button class="remove-btn" onclick="removeFromWishlist(${movie.movieId})">×</button>
+              <img src="${poster}" alt="${movie.title}" onclick="goToDetails(${movie.movieId})">
+              <h4 onclick="goToDetails(${movie.movieId})">${movie.title}</h4>
+              <p><strong>Genres:</strong> ${genres}</p>
+              <p><strong>Rating:</strong> ${rating}</p>
+              <p><strong>Cast:</strong> ${cast}</p>
+            `;
+            grid.appendChild(card);
+          });
+        }
+      });
+
+    function removeFromWishlist(id) {
+      const updated = wishlist.filter(mid => mid !== id);
+      localStorage.setItem("wishlist", JSON.stringify(updated));
+      location.reload();
+    }
+
+    function goToDetails(id) {
+      window.location.href = `/movie?id=${id}`;
+    }
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.first) {
+      document.getElementById("userGreeting").innerText = `Welcome, ${user.first}!`;
+    }
+  </script>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
