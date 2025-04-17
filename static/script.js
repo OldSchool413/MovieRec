@@ -35,14 +35,12 @@ function filterByGenre(genre) {
 }
 
 function getStarHTML(rating) {
-  const full = Math.floor(rating / 2);
-  const half = (rating / 2) - full >= 0.25 && (rating / 2) - full < 0.75;
+  const starRating = Math.round((rating / 2) * 2) / 2; // Round to nearest 0.5
   let stars = '';
-
   for (let i = 1; i <= 5; i++) {
-    if (i <= full) {
+    if (i <= starRating) {
       stars += '<i class="fa fa-star fa-solid"></i>';
-    } else if (i === full + 1 && half) {
+    } else if (i - 0.5 === starRating) {
       stars += '<i class="fa fa-star-half-stroke fa-solid"></i>';
     } else {
       stars += '<i class="fa fa-star fa-regular"></i>';
@@ -50,6 +48,7 @@ function getStarHTML(rating) {
   }
   return stars;
 }
+
 
 function loadMoreMovies(skipTMDb = false) {
   const query = searchInput.value.toLowerCase();
